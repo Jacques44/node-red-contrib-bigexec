@@ -88,10 +88,6 @@ module.exports = function(RED) {
           dummy._write = function(data, encoding, done) { done() }
         }
 
-        console.log("Command line: " + my_config.command);
-        console.log("Arguments: ", (my_config.commandArgs.concat(my_config.commandArgs2||[])).join(', '))
-        console.log(spawn_config);
-
         // Here it is, the job is starting now
         var child = new require('child_process').spawn(my_config.command, my_config.commandArgs.concat(my_config.commandArgs2||[]), spawn_config);
 
@@ -103,7 +99,6 @@ module.exports = function(RED) {
             // Gives biglib extra informations using the "stats" function                        
             this.stats({ rc: code, signal: signal });    
             ret.emit('my_finish');    
-            console.log("Emitting...");     
           }.bind(this))
           .on('error', function(err) {
             ret.emit('error', err);
