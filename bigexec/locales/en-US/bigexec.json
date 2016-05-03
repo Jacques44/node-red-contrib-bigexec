@@ -7,7 +7,7 @@
             "commandArgs": "Arguments",
             "cwd": "Directory",
             "shell": "Use shell",
-            "noStdin": "Command has no input",
+            "noStdin": "Do not send payload to the command",
             "payloadIsArg": "Payload is an argument",
             "minError": "Min error code",
             "minWarning": "Min warning code",

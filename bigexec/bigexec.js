@@ -35,27 +35,12 @@ module.exports = function(RED) {
     "use strict";
 
     var biglib = require('node-red-biglib');
-    var sq = require('shell-quote');
-
-    var argument_to_array = function(arg) {
-
-      if (Array.isArray(arg)) return arg;
-      if (typeof arg == 'object') {
-        var ret = [];
-        Object.keys(arg).forEach(function(k) {
-          ret.push(k);
-          ret.push(typeof arg[k] == 'object' ? JSON.stringify(arg[k]) : arg[k].toString());
-        })
-        return ret;
-      }
-      return sq.parse((arg||"").toString());
-    }
 
     // Definition of which options are known for spawning a command (ie node configutation to BigExec.spawn function)
     var spawn_options = {
       "command": "",                                                  // Command to execute
-      "commandArgs": { value: "", validation: argument_to_array },    // Arguments from the configuration box
-      "commandArgs2": { value: "", validation: argument_to_array },   // Payload as additional arguments if required
+      "commandArgs": { value: "", validation: biglib.argument_to_array },    // Arguments from the configuration box
+      "commandArgs2": { value: "", validation: biglib.argument_to_array },   // Payload as additional arguments if required
       "minWarning": 1,                                                // The min return code the node will consider it is a warning
       "minError": 8,                                                  // The min return code the node will consider it is as an error
       "cwd": "",                                                      // The working directory
@@ -81,17 +66,20 @@ module.exports = function(RED) {
 
         // This dummy writable is used when the command does not need any data on its stdin
         // If any data is coming, this stream drops it and no "EPIPE error" is thrown
-        var dummy;
-        if (my_config.noStdin) {
-          // Build a dummy stream that discards input message
-          dummy = new require('stream').Writable();
-          dummy._write = function(data, encoding, done) { done() }
-        }
+        var dummy = biglib.dummy_writable(my_config.noStdin);  
+
+        this.working("Executing " + my_config.command.substr(0,20) + "...");
 
         // Here it is, the job is starting now
         var child = new require('child_process').spawn(my_config.command, my_config.commandArgs.concat(my_config.commandArgs2||[]), spawn_config);
 
-        var ret = require('event-stream').duplex(my_config.noStdin ? dummy : child.stdin, child.stdout);
+        // This to avoid "invalid chunk data" when payload is not a string
+        var stringify = biglib.stringify_stream();
+        stringify.pipe(child.stdin);
+
+        var ret = require('event-stream').duplex(my_config.payloadIsArg ? dummy : stringify, child.stdout);
+        //if (my_config.noStdin) child.stdin.end();
+
         ret.others = [ child.stderr ]; 
 
         child
@@ -101,26 +89,24 @@ module.exports = function(RED) {
             ret.emit('my_finish');    
           }.bind(this))
           .on('error', function(err) {
+            console.log(err);
             ret.emit('error', err);
           })        
       
         return ret;
       }
 
-      // Custom on_finish callback used to correct the node status relative to the command return code
-      var my_finish = function(stats) {  
-        console.log("my_finish with code = " + stats.rc);
-        if (config.minError && stats.rc >= config.minError) this.set_error(new Error("Return code " + stats.rc)); 
-        else if (config.minWarning && stats.rc >= config.minWarning) this.set_warning();                
-      };
+      // Custom progress function
+      var progress = function(running) { return running ? "running for " + this.duration() : ("done with rc " + (this._runtime_control.rc != undefined ? this._runtime_control.rc : "?")) }
 
       // new instance of biglib for this configuration
+      // probably the most tuned biglib I've asked ever...
       var bignode = new biglib({ 
         config: config, node: this,   // biglib needs to know the node configuration and the node itself (for statuses and sends)
-        status: 'filesize',           // define the kind of informations displayed while running
+        status: progress,             // define the kind of informations displayed while running
         parser_config: spawn_options, // the parser configuration (ie the known options the parser will understand)
         parser: spawn,                // the parser (ie the remote command)
-        on_finish: my_finish,         // custom on_finish handler
+        on_finish: biglib.min_finish, // custom on_finish handler
         finish_event: 'my_finish'     // custom finish event to listen to
       });
 
@@ -134,6 +120,9 @@ module.exports = function(RED) {
         if (config.payloadIsArg && msg.payload) {
           msg.config = msg.config || {};
           msg.config.commandArgs2 = msg.payload;
+
+          // if not, the size_stream which streams to the command will throw EPIPE
+          delete msg.payload;
         }
 
         bignode.main.call(bignode, msg);
