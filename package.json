@@ -4,7 +4,7 @@
   "description": "A Big Exec",
   "dependencies": {
     "event-stream": "^3.3.2",
-    "node-red-biglib": "^1.0.1"
+    "node-red-biglib": "^1.1.1"
   },
   "keywords": [
     "node-red"
@@ -23,5 +23,5 @@
     "url": "https://github.com/Jacques44/node-red-contrib-bigexec/issues"
   },
   "homepage": "https://github.com/Jacques44/node-red-contrib-bigexec",
-  "_id": "node-red-contrib-bigexec@1.0.1"
+  "_id": "node-red-contrib-bigexec@1.1.1"
 }

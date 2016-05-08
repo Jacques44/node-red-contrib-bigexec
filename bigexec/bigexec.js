@@ -41,6 +41,7 @@ module.exports = function(RED) {
       "command": "",                                                  // Command to execute
       "commandArgs": { value: "", validation: biglib.argument_to_array },    // Arguments from the configuration box
       "commandArgs2": { value: "", validation: biglib.argument_to_array },   // Payload as additional arguments if required
+      "commandArgs3": { value: "", validation: biglib.argument_to_array },   // Extra argument from message if property set
       "minWarning": 1,                                                // The min return code the node will consider it is a warning
       "minError": 8,                                                  // The min return code the node will consider it is as an error
       "cwd": "",                                                      // The working directory
@@ -71,7 +72,7 @@ module.exports = function(RED) {
         this.working("Executing " + my_config.command.substr(0,20) + "...");
 
         // Here it is, the job is starting now
-        var child = new require('child_process').spawn(my_config.command, my_config.commandArgs.concat(my_config.commandArgs2||[]), spawn_config);
+        var child = new require('child_process').spawn(my_config.command, my_config.commandArgs.concat(my_config.commandArgs2||[]).concat(my_config.commandArgs3||[]), spawn_config);
 
         // This to avoid "invalid chunk data" when payload is not a string
         var stringify = biglib.stringify_stream();
@@ -123,6 +124,11 @@ module.exports = function(RED) {
 
           // if not, the size_stream which streams to the command will throw EPIPE
           delete msg.payload;
+        }
+
+        if (config.extraArgumentProperty && msg[config.extraArgumentProperty]) {
+          msg.config = msg.config || {};
+          msg.config.commandArgs3 = msg[config.extraArgumentProperty];
         }
 
         bignode.main.call(bignode, msg);

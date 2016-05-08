@@ -12,7 +12,9 @@
             "minError": "Min error code",
             "minWarning": "Min warning code",
             "minWarningWM": "warn",
-            "minErrorWM": "error"
+            "minErrorWM": "error",
+            "extraArgumentProperty": "Extra argument property",
+            "property": "property"
         }    
     }
 }

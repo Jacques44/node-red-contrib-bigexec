@@ -22,7 +22,7 @@
     </div>   
 
     <div class="form-row">
-         <label for="node-input-commandArgs"><i class="fa fa-plus-plus"></i> <span data-i18n="bigexec.label.commandArgs"></span></label>
+         <label for="node-input-commandArgs"><i class="fa fa-plus-square"></i> <span data-i18n="bigexec.label.commandArgs"></span></label>
          <input type="text" id="node-input-commandArgs" data-i18n="[placeholder]bigexec.label.commandArgs">
     </div>   
 
@@ -48,6 +48,12 @@
         <input type="checkbox" id="node-input-payloadIsArg" style="display: inline-block; width: auto; vertical-align: top;">
         <label for="node-input-payloadIsArg" style="width: 70%;"><span data-i18n="bigexec.label.payloadIsArg"></span></label>
     </div>     
+
+     <div class="form-row">
+        <label>&nbsp;</label>
+        <label for="node-input-extraArgumentProperty" style="width: 50%;"><i class="fa fa-plus-square"></i> <span data-i18n="bigexec.label.extraArgumentProperty"></span></label>
+        <input style="width: 20%;" type="text" id="node-input-extraArgumentProperty" data-i18n="[placeholder]bigexec.label.property">
+    </div>    
 
     <div class="form-row">
         <label>&nbsp;</label>
@@ -89,7 +95,8 @@
             cwd: { value: "" },
             shell: { value: "" },
             noStdin: { value: false },
-            payloadIsArg: { value: false }
+            payloadIsArg: { value: false },
+            extraArgumentProperty: { value: "" }
         },       
         color:"#0099cc",
         inputs:1,
