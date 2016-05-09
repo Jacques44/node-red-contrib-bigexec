@@ -6,7 +6,7 @@
             "command": "Command",
             "commandArgs": "Arguments",
             "cwd": "Directory",
-            "shell": "Use shell",
+            "shell": "Use shell (node v6)",
             "noStdin": "Do not send payload to the command",
             "payloadIsArg": "Payload is an argument",
             "minError": "Min error code",

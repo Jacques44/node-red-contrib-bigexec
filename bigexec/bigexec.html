@@ -81,11 +81,16 @@
 </script>
 
 <script type="text/x-red" data-help-name="bigexec">
-    <p>Launchs a command using SSH. Credentials are stored using a configuration</p>
-    <p>The node has one input which is used by the SSH command to receive data (stdin for the remote command)</p>
-    <p>The first output is the output for the command (stdout)</p>
-    <p>The second output is the <code>control</code> output as <code>big ssh</code> is a big node.</p>
-    <p>The third output is the error output for the command (stderr)</p>
+    <p>Launchs a command using spawn. Spawn is choosen in order to get stdin/stdout and stderr streams</p>
+    <p><b>First output</b> is for <code>stdout</code> as a buffer. You can use <code>Big Line</code> to decode each line as a separate payload</p>
+    <p><b>Second output</b> is for <code>control messages</code>. See <a href=https://github.com/Jacques44/node-red-biglib/wiki/General-Specifications for details>big lib specifications</a></p>
+    <p><b>Third output</b> is for <code>stderr</code></p>
+    <p>It's possible to control payload and to use it as an argument (<code>payloadIsArg</code>) or as a stream of data for the command (default behaviour if <code>noStdin</code> is not set)</p>
+    <p>The <code>env</code> property is read from the incoming message to set environement values. It must be a json key/value pair</p>
+    <p>The <code>extra argument</code> property is read from the incoming message to add extra arguments </p>
+    <p>The <code>minWarning</code> value will set the node status to yellow if the return code is greater than or equal</p>
+    <p>The <code>minError</code> value will set the node status to red and send an error if the return code is greater than or equal</p>
+
 </script>
 
 <script type="text/javascript">
