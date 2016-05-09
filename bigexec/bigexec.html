@@ -55,6 +55,12 @@
         <input style="width: 20%;" type="text" id="node-input-extraArgumentProperty" data-i18n="[placeholder]bigexec.label.property">
     </div>    
 
+     <div class="form-row">
+        <label>&nbsp;</label>
+        <label for="node-input-envProperty" style="width: 50%;"><i class="fa fa-plus-square"></i> <span data-i18n="bigexec.label.envProperty"></span></label>
+        <input style="width: 20%;" type="text" id="node-input-envProperty" data-i18n="[placeholder]bigexec.label.property">
+    </div>  
+
     <div class="form-row">
         <label>&nbsp;</label>
         <label for="node-input-minWarning" style="width: 30%;"><i class="fa fa-truck"></i> <span data-i18n="bigexec.label.minWarning"></span></label>
@@ -96,11 +102,12 @@
             shell: { value: "" },
             noStdin: { value: false },
             payloadIsArg: { value: false },
-            extraArgumentProperty: { value: "" }
+            extraArgumentProperty: { value: "" },
+            envProperty: { value: "" }
         },       
         color:"#0099cc",
         inputs:1,
-        outputs:2,
+        outputs:3,
         icon: "white-globe.png",
         label: function() {
             return this.name||"Big Exec";

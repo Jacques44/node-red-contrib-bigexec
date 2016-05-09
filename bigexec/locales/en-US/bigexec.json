@@ -14,6 +14,7 @@
             "minWarningWM": "warn",
             "minErrorWM": "error",
             "extraArgumentProperty": "Extra argument property",
+            "envProperty": "Extra environment",
             "property": "property"
         }    
     }
