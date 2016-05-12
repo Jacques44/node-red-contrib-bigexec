@@ -142,9 +142,7 @@ module.exports = function(RED) {
             msg.config.env = Object.assign({}, process.env);;
             var env = typeof msg[config.envProperty] == 'string' ? JSON.parse(msg[config.envProperty]) : msg[config.envProperty];
             Object.keys(env).forEach(function(k) {
-              console.log(msg[config.envProperty][k]);
               msg.config.env[k] = Mustache.render(msg[config.envProperty][k], process.env);
-              console.log(msg.config.env[k]);
             });
           } catch (err) {
             this.error(err);
