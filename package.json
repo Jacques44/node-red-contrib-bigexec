@@ -4,6 +4,7 @@
   "description": "A Big Exec",
   "dependencies": {
     "event-stream": "^3.3.2",
+    "mustache": "^2.2.1",
     "node-red-biglib": "^1.1.1"
   },
   "keywords": [

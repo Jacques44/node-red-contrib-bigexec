@@ -36,6 +36,10 @@ module.exports = function(RED) {
 
     var biglib = require('node-red-biglib');
 
+    var Mustache = require('mustache');
+    // Avoid html escaping
+    Mustache.escape = function (value) { return value; };
+
     // Definition of which options are known for spawning a command (ie node configutation to BigExec.spawn function)
     var spawn_options = {
       "command": "",                                                  // Command to execute
@@ -45,8 +49,8 @@ module.exports = function(RED) {
       "minWarning": 1,                                                // The min return code the node will consider it is a warning
       "minError": 8,                                                  // The min return code the node will consider it is as an error
       "cwd": "",                                                      // The working directory
-      "env": {},                
-      "shell": false,                                                 // Use a shell
+      "env": {},                                                      // env variables as key/value pairs
+      "shell": false,                                                 // Use a shell (only node v6)
       "noStdin": false                                                // Command does require an input (used to avoid EPIPE error)
     }    
 
@@ -133,7 +137,19 @@ module.exports = function(RED) {
 
         if (config.envProperty && msg[config.envProperty]) {
           msg.config = msg.config || {};
-          msg.config.env = msg[config.envProperty];
+
+          try {
+            msg.config.env = Object.assign({}, process.env);;
+            var env = typeof msg[config.envProperty] == 'string' ? JSON.parse(msg[config.envProperty]) : msg[config.envProperty];
+            Object.keys(env).forEach(function(k) {
+              console.log(msg[config.envProperty][k]);
+              msg.config.env[k] = Mustache.render(msg[config.envProperty][k], process.env);
+              console.log(msg.config.env[k]);
+            });
+          } catch (err) {
+            this.error(err);
+            console.log(err);
+          }
         }
 
         bignode.main.call(bignode, msg);
