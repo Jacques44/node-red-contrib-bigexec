@@ -29,25 +29,21 @@ npm install node-red-contrib-bigexec
 
   Visual status on the node tells it's ready/running (blue), all is ok and done (green) or in error (red)
 
-## Usage
-
-Still some to write there...
-
 ## Dependencies
 
 [biglib](https://www.npmjs.com/package/node-red-biglib) library for building node-red flows that supports blocks, high volume
 [node-shell-quote](https://github.com/substack/node-shell-quote) quote and parse shell commands
 [event-stream](https://github.com/dominictarr/event-stream) EventStream is like functional programming meets IO
+[mustache](https://www.npmjs.com/package/mustache) to upgrade environment variables with templates
 
 ## Capabilities
 
 This now launches a command using spawn which gives 3 streams, 1 for stdin, 1 for stdout and 1 for stderr. This node can launch command which doesn't need any input or a single message as an input or a flow of messages if driven by a Big Node (with control messages)
-<p>
-It's possible to use payload as extra arguments to the command
-It's possible to use another message property for extra arguments (in cas payload is stdin and the extra property means extra parameters)
-It's possible to set minimum error codes in order to get a warning or error status for the node
-It's possible to set extra environment variables in mustache form to complete existing one (example: <code>{ PATH: "{{PATH}}:." }</code>)
-<p>
+
+* It's possible to use payload as extra arguments to the command
+* It's possible to use another message property for extra arguments (in cas payload is stdin and the extra property means extra parameters)
+* It's possible to set minimum error codes in order to get a warning or error status for the node
+* It's possible to set extra environment variables in mustache form to complete existing one (example: <code>{ PATH: "{{PATH}}:." }</code>)
 	
 ## Example flow files
 

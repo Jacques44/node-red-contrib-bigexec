@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-bigexec",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "A Big Exec",
   "dependencies": {
     "event-stream": "^3.3.2",
@@ -24,5 +24,5 @@
     "url": "https://github.com/Jacques44/node-red-contrib-bigexec/issues"
   },
   "homepage": "https://github.com/Jacques44/node-red-contrib-bigexec",
-  "_id": "node-red-contrib-bigexec@1.1.4"
+  "_id": "node-red-contrib-bigexec@1.1.5"
 }
