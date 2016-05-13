@@ -73,6 +73,19 @@
         <input style="width: 10%;" type="text" id="node-input-minError" data-i18n="[placeholder]bigexec.label.minErrorWM">
     </div>           
 
+    <div class="form-row">
+        <label>&nbsp;</label>
+        <label for="node-input-format" style="width: 30%;"><i class="fa fa-sign-out"></i> <span data-i18n="bigexec.label.format"></span></label>
+        <select style="width: 40%;" id="node-input-format">    
+            <option value="utf8" data-i18n="bigexec.label.line_encoding_utf8"></option>
+            <option value="ascii" data-i18n="bigexec.label.line_encoding_ascii"></option>            
+            <option value="base64" data-i18n="bigexec.label.line_encoding_base64"></option>
+            <option value="binary" data-i18n="bigexec.label.line_encoding_binary"></option>
+            <option value="hex" data-i18n="bigexec.label.line_encoding_hex"></option>
+            <option value="ucs2" data-i18n="bigexec.label.line_encoding_ucs2"></option>
+        </select>
+    </div>     
+
      <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="bigexec.label.name"></span></label>
         <input type="text" id="node-input-name" data-i18n="[placeholder]bigexec.label.name">
@@ -108,7 +121,8 @@
             noStdin: { value: false },
             payloadIsArg: { value: false },
             extraArgumentProperty: { value: "" },
-            envProperty: { value: "" }
+            envProperty: { value: "" },
+            format: { value: "" }
         },       
         color:"#0099cc",
         inputs:1,

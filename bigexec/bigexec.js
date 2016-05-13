@@ -35,6 +35,7 @@ module.exports = function(RED) {
     "use strict";
 
     var biglib = require('node-red-biglib');
+    var stream = require('stream');
 
     // Definition of which options are known for spawning a command (ie node configutation to BigExec.spawn function)
     var spawn_options = {
@@ -77,6 +78,8 @@ module.exports = function(RED) {
         // This to avoid "invalid chunk data" when payload is not a string
         var stringify = biglib.stringify_stream();
         stringify.pipe(child.stdin);
+
+        if (my_config.format) child.stdout.setEncoding(format);
 
         var ret = require('event-stream').duplex(my_config.payloadIsArg ? dummy : stringify, child.stdout);
         //if (my_config.noStdin) child.stdin.end();
