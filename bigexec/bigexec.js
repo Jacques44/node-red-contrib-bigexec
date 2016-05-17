@@ -116,6 +116,7 @@ module.exports = function(RED) {
         parser_config: spawn_options, // the parser configuration (ie the known options the parser will understand)
         parser: spawn,                // the parser (ie the remote command)
         on_finish: biglib.min_finish, // custom on_finish handler
+        generator: 'limiter',
         finish_event: 'my_finish'     // custom finish event to listen to
       });
 

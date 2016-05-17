@@ -69,20 +69,20 @@
 
     <div class="form-row">
         <label>&nbsp;</label>
-        <label for="node-input-minWarning" style="width: 30%;"><i class="fa fa-truck"></i> <span data-i18n="bigexec.label.minWarning"></span></label>
+        <label for="node-input-minWarning" style="width: 60%;"><i class="fa fa-truck"></i> <span data-i18n="bigexec.label.minWarning"></span></label>
         <input style="width: 10%;" type="text" id="node-input-minWarning" data-i18n="[placeholder]bigexec.label.minWarningWM">
     </div>   
 
     <div class="form-row">
         <label>&nbsp;</label>
-        <label for="node-input-minError" style="width: 30%;"><i class="fa fa-truck"></i> <span data-i18n="bigexec.label.minError"></span></label>
+        <label for="node-input-minError" style="width: 60%;"><i class="fa fa-truck"></i> <span data-i18n="bigexec.label.minError"></span></label>
         <input style="width: 10%;" type="text" id="node-input-minError" data-i18n="[placeholder]bigexec.label.minErrorWM">
     </div>           
 
     <div class="form-row">
         <label>&nbsp;</label>
-        <label for="node-input-format" style="width: 30%;"><i class="fa fa-sign-out"></i> <span data-i18n="bigexec.label.format"></span></label>
-        <select style="width: 40%;" id="node-input-format">    
+        <label for="node-input-format" style="width: 40%;"><i class="fa fa-sign-out"></i> <span data-i18n="bigexec.label.format"></span></label>
+        <select style="width: 35%;" id="node-input-format">    
             <option value="utf8" data-i18n="bigexec.label.line_encoding_utf8"></option>
             <option value="ascii" data-i18n="bigexec.label.line_encoding_ascii"></option>            
             <option value="base64" data-i18n="bigexec.label.line_encoding_base64"></option>
@@ -129,7 +129,8 @@
             extraArgumentProperty: { value: "" },
             envProperty: { value: "" },
             format: { value: "" },
-            add_eol: { value: false }
+            add_eol: { value: false },
+            limiter: { value: true }
         },       
         color:"#0099cc",
         inputs:1,
