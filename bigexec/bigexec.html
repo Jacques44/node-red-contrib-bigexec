@@ -43,7 +43,13 @@
         <label for="node-input-noStdin" style="width: 70%;"><span data-i18n="bigexec.label.noStdin"></span></label>
     </div>    
 
-   <div class="form-row">
+    <div class="form-row">
+        <label>&nbsp;</label>
+        <input type="checkbox" id="node-input-add_eol" style="display: inline-block; width: auto; vertical-align: top;">
+        <label for="node-input-add_eol" style="width: 70%;"><span data-i18n="bigexec.label.add_eol"></span></label>
+    </div>    
+
+    <div class="form-row">
         <label>&nbsp;</label>
         <input type="checkbox" id="node-input-payloadIsArg" style="display: inline-block; width: auto; vertical-align: top;">
         <label for="node-input-payloadIsArg" style="width: 70%;"><span data-i18n="bigexec.label.payloadIsArg"></span></label>
@@ -84,7 +90,7 @@
             <option value="hex" data-i18n="bigexec.label.line_encoding_hex"></option>
             <option value="ucs2" data-i18n="bigexec.label.line_encoding_ucs2"></option>
         </select>
-    </div>     
+    </div>       
 
      <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="bigexec.label.name"></span></label>
@@ -98,7 +104,7 @@
     <p><b>First output</b> is for <code>stdout</code> as a buffer. You can use <code>Big Line</code> to decode each line as a separate payload</p>
     <p><b>Second output</b> is for <code>control messages</code>. See <a href=https://github.com/Jacques44/node-red-biglib/wiki/General-Specifications for details>big lib specifications</a></p>
     <p><b>Third output</b> is for <code>stderr</code></p>
-    <p>It's possible to control payload and to use it as an argument (<code>payloadIsArg</code>) or as a stream of data for the command (default behaviour if <code>noStdin</code> is not set)</p>
+    <p>It is possible to control payload and to use it as an argument (<code>payloadIsArg</code>) or as a stream of data for the command (default behaviour if <code>noStdin</code> is not set)</p>
     <p>The <code>env</code> property is read from the incoming message to set environement values. It must be a json key/value pair or a string which will be parsed. The environment values may be in mustache form to modify existing variables. Example to add <code>.</code> to the <code>PATH</code>: <code>{ PATH: "{{PATH}}:." }</code></p>
     <p>The <code>extra argument</code> property is read from the incoming message to add extra arguments </p>
     <p>The <code>minWarning</code> value will set the node status to yellow if the return code is greater than or equal</p>
@@ -122,7 +128,8 @@
             payloadIsArg: { value: false },
             extraArgumentProperty: { value: "" },
             envProperty: { value: "" },
-            format: { value: "" }
+            format: { value: "" },
+            add_eol: { value: false }
         },       
         color:"#0099cc",
         inputs:1,

@@ -52,7 +52,8 @@ module.exports = function(RED) {
       "cwd": "",                                                      // The working directory
       "env": {},                                                      // env variables as key/value pairs
       "shell": false,                                                 // Use a shell (only node v6)
-      "noStdin": false                                                // Command does require an input (used to avoid EPIPE error)
+      "noStdin": false,                                               // Command does require an input (used to avoid EPIPE error)
+      "add_eol": false
     }    
 
     function BigExec(config) {
@@ -80,7 +81,7 @@ module.exports = function(RED) {
         var child = new require('child_process').spawn(my_config.command, my_config.commandArgs.concat(my_config.commandArgs2||[]).concat(my_config.commandArgs3||[]), spawn_config);
 
         // This to avoid "invalid chunk data" when payload is not a string
-        var stringify = biglib.stringify_stream();
+        var stringify = biglib.stringify_stream(my_config.add_eol ? "\n": "");
         stringify.pipe(child.stdin);
 
         if (my_config.format) child.stdout.setEncoding(format);
