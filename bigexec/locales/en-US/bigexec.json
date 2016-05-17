@@ -24,7 +24,7 @@
             "line_encoding_binary": "binary (latin-1)",
             "line_encoding_hex": "hex (hexadecimal)",
             "line_encoding_ucs2": "ucs2 (= uft16le)",
-            "add_eol": "add \\n after each payload"
+            "add_eol": "add \\n at the end of each incoming payload"
         }    
     }
 }
