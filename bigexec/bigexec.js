@@ -109,12 +109,10 @@ module.exports = function(RED) {
         // Use promise to wait both events (exit & finish)
         var p1 = new Promise(function(fullfill, reject) { 
           child.on('exit', function(code, signal) {                         
-            console.log("Fin avec signal " + code);
             fullfill({ rc: code, signal: signal })
           })
         })
 
-        child.stdout.on('finish', function() { console.log("child has finished") });
         var p2 = new Promise(function(fullfill, reject) {
           child.stdout.on('finish', fullfill);          
         })
