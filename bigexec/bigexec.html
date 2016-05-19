@@ -39,21 +39,16 @@
 
     <div class="form-row">
         <label>&nbsp;</label>
-        <input type="checkbox" id="node-input-noStdin" style="display: inline-block; width: auto; vertical-align: top;">
-        <label for="node-input-noStdin" style="width: 70%;"><span data-i18n="bigexec.label.noStdin"></span></label>
-    </div>    
-
-    <div class="form-row">
-        <label>&nbsp;</label>
-        <input type="checkbox" id="node-input-add_eol" style="display: inline-block; width: auto; vertical-align: top;">
-        <label for="node-input-add_eol" style="width: 70%;"><span data-i18n="bigexec.label.add_eol"></span></label>
-    </div>    
-
-    <div class="form-row">
-        <label>&nbsp;</label>
-        <input type="checkbox" id="node-input-payloadIsArg" style="display: inline-block; width: auto; vertical-align: top;">
-        <label for="node-input-payloadIsArg" style="width: 70%;"><span data-i18n="bigexec.label.payloadIsArg"></span></label>
-    </div>     
+        <label for="node-input-payloadIs" style="width: 30%;"><i class="fa fa-sign-out"></i> <span data-i18n="bigexec.label.payloadIs"></span></label>
+        <select style="width: 45%;" id="node-input-payloadIs">    
+            <option value="trigger" data-i18n="bigexec.label.payloadIsTrigger"></option>
+            <option value="triggerNoStdin" data-i18n="bigexec.label.payloadIsTriggerNoStdin"></option>
+            <option value="argument" data-i18n="bigexec.label.payloadIsArgument"></option>            
+            <option value="argumentNoStdin" data-i18n="bigexec.label.payloadIsArgumentNoStdin"></option>            
+            <option value="input" data-i18n="bigexec.label.payloadIsInput"></option>
+            <option value="inputCR" data-i18n="bigexec.label.payloadIsInputNeedsCR"></option>
+        </select>
+    </div>  
 
      <div class="form-row">
         <label>&nbsp;</label>
@@ -124,13 +119,11 @@
             minWarning: { value: 1 },
             cwd: { value: "" },
             shell: { value: "" },
-            noStdin: { value: false },
-            payloadIsArg: { value: false },
             extraArgumentProperty: { value: "" },
             envProperty: { value: "" },
             format: { value: "" },
-            add_eol: { value: false },
-            limiter: { value: true }
+            limiter: { value: true },
+            payloadIs: { value: "triggerNoStdin" }
         },       
         color:"#0099cc",
         inputs:1,

@@ -55,8 +55,7 @@ module.exports = function(RED) {
       "cwd": "",                                                      // The working directory
       "env": {},                                                      // env variables as key/value pairs
       "shell": false,                                                 // Use a shell (only node v6)
-      "noStdin": false,                                               // Command does require an input (used to avoid EPIPE error)
-      "add_eol": false
+      "payloadAction": {}
     }    
 
     function BigExec(config) {
@@ -79,25 +78,23 @@ module.exports = function(RED) {
         // Here it is, the job is starting now
         var child = new require('child_process').spawn(my_config.command, my_config.commandArgs.concat(my_config.commandArgs2||[]).concat(my_config.commandArgs3||[]), spawn_config);
 
-        // 3 cases for stdin                    
-        var stdin;
-        if (my_config.payloadIsArg) {
-          // a. payload is an argument, dummy stdin (no close)
-          stdin = child.stdin;
+        // Cases for stdin
+        var stdin = child.stdin;
+
+        // if payload is some data needed by the command
+        if (my_config.payloadAction.data) {
+          stdin = biglib.stringify_stream(my_config.payloadAction.cr ? "\n": "");
+          stdin.pipe(child.stdin);
         } else {
-          // b. payload has no interest dummy stdin
           // This dummy writable is used when the command does not need any data on its stdin
-          // If any data is coming, this stream drops it and no "EPIPE error" is thrown          
-          if (my_config.noStdin) {
-            stdin = biglib.dummy_writable();
-          } else {
-            // c. payload has to be sent to the command, stringify
-            // This to avoid "invalid chunk data" when payload is not a string
-            stdin = biglib.stringify_stream(my_config.add_eol ? "\n": "");
-            stdin.pipe(child.stdin);
-          }
+          // If any data is coming, this stream drops it and no "EPIPE error" is thrown                 
+          stdin = biglib.dummy_writable();
         }
 
+        // stdin needs to be closed?
+        if (!my_config.payloadAction.stdin) child.stdin.end();
+
+        // stdout configuration        
         if (my_config.format) child.stdout.setEncoding(format);
 
         var ret = require('event-stream').duplex(stdin, child.stdout);
@@ -112,10 +109,12 @@ module.exports = function(RED) {
         // Use promise to wait both events (exit & finish)
         var p1 = new Promise(function(fullfill, reject) { 
           child.on('exit', function(code, signal) {                         
+            console.log("Fin avec signal " + code);
             fullfill({ rc: code, signal: signal })
           })
         })
 
+        child.stdout.on('finish', function() { console.log("child has finished") });
         var p2 = new Promise(function(fullfill, reject) {
           child.stdout.on('finish', fullfill);          
         })
@@ -146,12 +145,24 @@ module.exports = function(RED) {
       // biglib changes the configuration to add some properties
       config = bignode.config();
 
+      var payloadIs = {
+        "trigger": { stdin: true, arg: false, data: false },
+        "triggerNoStdin": { stdin: false, arg: false, data: false },
+        "argument": { stdin: true, arg: true, data: false },
+        "argumentNoStdin": { stdin: false, arg: true, data: false },
+        "input": { stdin: true, arg: false, data: true },
+        "inputCR": { stdin: true, arg: false, data: true, cr: true }
+      }
+
       this.on('input', function(msg) {
+
+        msg.config = msg.config || {};
+        msg.config.payloadAction = payloadIs[config.payloadIs] || payloadIs["triggerNoStdin"];
 
         // Is payload an extra argument
         delete config.commandArgs2;
-        if (config.payloadIsArg && msg.payload) {
-          msg.config = msg.config || {};
+        // If payload is an extra argument...
+        if (msg.config.payloadAction.arg && msg.payload) {
           msg.config.commandArgs2 = msg.payload;
 
           // if not, the size_stream which streams to the command will throw EPIPE
@@ -159,12 +170,10 @@ module.exports = function(RED) {
         }
 
         if (config.extraArgumentProperty && msg[config.extraArgumentProperty]) {
-          msg.config = msg.config || {};
           msg.config.commandArgs3 = msg[config.extraArgumentProperty];
         }
 
         if (config.envProperty && msg[config.envProperty]) {
-          msg.config = msg.config || {};
 
           try {
             msg.config.env = Object.assign({}, process.env);;

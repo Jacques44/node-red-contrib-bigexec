@@ -7,7 +7,7 @@
             "commandArgs": "Arguments",
             "cwd": "Directory",
             "shell": "Use shell (node v6)",
-            "noStdin": "Do not send payload to the command",
+            "noStdin": "Command has no stdin?",
             "payloadIsArg": "Payload is an argument",
             "minError": "Min error code",
             "minWarning": "Min warning code",
@@ -24,7 +24,14 @@
             "line_encoding_binary": "binary (latin-1)",
             "line_encoding_hex": "hex (hexadecimal)",
             "line_encoding_ucs2": "ucs2 (= uft16le)",
-            "add_eol": "add \\n at the end of each incoming payload"
+            "add_eol": "Add \\n at the end of each incoming payload",
+            "payloadIs": "Payload is",
+            "payloadIsTrigger": "just a trigger",
+            "payloadIsTriggerNoStdin": "just a trigger, close stdin",
+            "payloadIsArgument": "an argument",
+            "payloadIsArgumentNoStdin": "an argument, close stdin",
+            "payloadIsInput": "an input",
+            "payloadIsInputNeedsCR": "an input, needs extra \\n"
         }    
     }
 }
