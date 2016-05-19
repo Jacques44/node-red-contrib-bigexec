@@ -36,10 +36,13 @@ module.exports = function(RED) {
 
     var biglib = require('node-red-biglib');
     var stream = require('stream');
+    var promise = require('promise');
 
     var Mustache = require('mustache');
     // Avoid html escaping
     Mustache.escape = function (value) { return value; };
+
+    var custom_event = 'my_finish';
 
     // Definition of which options are known for spawning a command (ie node configutation to BigExec.spawn function)
     var spawn_options = {
@@ -71,36 +74,56 @@ module.exports = function(RED) {
           shell: my_config.shell
         }
 
-        // This dummy writable is used when the command does not need any data on its stdin
-        // If any data is coming, this stream drops it and no "EPIPE error" is thrown
-        var dummy = biglib.dummy_writable(my_config.noStdin);  
-
         this.working("Executing " + my_config.command.substr(0,20) + "...");
 
         // Here it is, the job is starting now
         var child = new require('child_process').spawn(my_config.command, my_config.commandArgs.concat(my_config.commandArgs2||[]).concat(my_config.commandArgs3||[]), spawn_config);
 
-        // This to avoid "invalid chunk data" when payload is not a string
-        var stringify = biglib.stringify_stream(my_config.add_eol ? "\n": "");
-        stringify.pipe(child.stdin);
+        // 3 cases for stdin                    
+        var stdin;
+        if (my_config.payloadIsArg) {
+          // a. payload is an argument, dummy stdin (no close)
+          stdin = child.stdin;
+        } else {
+          // b. payload has no interest dummy stdin
+          // This dummy writable is used when the command does not need any data on its stdin
+          // If any data is coming, this stream drops it and no "EPIPE error" is thrown          
+          if (my_config.noStdin) {
+            stdin = biglib.dummy_writable();
+          } else {
+            // c. payload has to be sent to the command, stringify
+            // This to avoid "invalid chunk data" when payload is not a string
+            stdin = biglib.stringify_stream(my_config.add_eol ? "\n": "");
+            stdin.pipe(child.stdin);
+          }
+        }
 
         if (my_config.format) child.stdout.setEncoding(format);
 
-        var ret = require('event-stream').duplex(my_config.payloadIsArg ? dummy : stringify, child.stdout);
-        //if (my_config.noStdin) child.stdin.end();
+        var ret = require('event-stream').duplex(stdin, child.stdout);
 
         ret.others = [ child.stderr ]; 
 
         child
-          .on('exit', function(code, signal) {  
-            // Gives biglib extra informations using the "stats" function                        
-            this.stats({ rc: code, signal: signal });    
-            ret.emit('my_finish');    
-          }.bind(this))
           .on('error', function(err) {
-            console.log(err);
             ret.emit('error', err);
-          })        
+          })
+
+        // Use promise to wait both events (exit & finish)
+        var p1 = new Promise(function(fullfill, reject) { 
+          child.on('exit', function(code, signal) {                         
+            fullfill({ rc: code, signal: signal })
+          })
+        })
+
+        var p2 = new Promise(function(fullfill, reject) {
+          child.stdout.on('finish', fullfill);          
+        })
+
+        Promise.all([p1, p2]).then(function(data) {          
+          this.stats(data[0]);
+          ret.emit(custom_event);
+        }.bind(this));
       
         return ret;
       }
@@ -117,7 +140,7 @@ module.exports = function(RED) {
         parser: spawn,                // the parser (ie the remote command)
         on_finish: biglib.min_finish, // custom on_finish handler
         generator: 'limiter',
-        finish_event: 'my_finish'     // custom finish event to listen to
+        finish_event: custom_event    // custom finish event to listen to
       });
 
       // biglib changes the configuration to add some properties
@@ -151,7 +174,6 @@ module.exports = function(RED) {
             });
           } catch (err) {
             this.error(err);
-            console.log(err);
           }
         }
 
