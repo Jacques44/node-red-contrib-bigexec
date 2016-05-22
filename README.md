@@ -2,13 +2,9 @@
 
 "Big Exec" is a Big Node for node-red. It's used to execute command
 
-![alt tag](https://cloud.githubusercontent.com/assets/18165555/15128101/209b7cbc-163a-11e6-80dc-6a182c1ca86f.png)
+![alt tag](https://cloud.githubusercontent.com/assets/18165555/15455714/ed942b5c-205c-11e6-94cb-4b2dce8a113a.png)
 
-![alt tag](https://cloud.githubusercontent.com/assets/18165555/15128101/209b7cbc-163a-11e6-80dc-6a182c1ca86f.png)
-
-![alt tag](https://cloud.githubusercontent.com/assets/18165555/15128099/20968496-163a-11e6-9c36-5d7bab13c112.png)
-
-![alt tag](https://cloud.githubusercontent.com/assets/18165555/15128100/20979ff2-163a-11e6-9426-0fd74e72de48.png)
+![alt tag](https://cloud.githubusercontent.com/assets/18165555/15455716/f117a5a6-205c-11e6-9bd6-cdbe6409a87b.png)
 
 ## Installation
 ```bash
