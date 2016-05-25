@@ -184,6 +184,12 @@ module.exports = function(RED) {
           }
         }
 
+        // Special case payload is for stdin an not in block mode (force standalone in order to have input closed)
+        if (msg.config.payloadAction.data && (!msg.control || !msg.control.state)) {
+          msg.control = msg.control || {};
+          msg.control.state = 'standalone';
+        }
+
         bignode.main.call(bignode, msg);
       })
     }  
